@@ -1,5 +1,7 @@
 #include <stdio.h>
 // TODO: lookup unsigned long vs long size constraints
+// unsigned is 0 to 4294967295
+// signed is +/- 2147473648
 int main(int argc, char *argv[]) 
 { 
     int bugs = 100;

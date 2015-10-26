@@ -7,6 +7,10 @@ int main(int argc, char *argv[])
     char full_name[] = {
       'Z', 'e', 'd', ' ', 'A', '.', ' ', 'S', 'h', 'a', 'w', '\0'
     };
+    // This throws warnings because of array bound issues
+    /*areas[5] = 100;*/
+    /*name[3] = 'd';*/
+    /*name[4] = '\0';*/
 
     printf("The size of an int: %ld\n", sizeof(int));
     printf("The size of areas (int[]): %ld\n",
@@ -14,7 +18,7 @@ int main(int argc, char *argv[])
     printf("The number of ints in areas: %ld\n",
            sizeof(areas) / sizeof(int));
     printf("The first area is %d, the 2nd %d.\n",
-           areas[0], areas[1]);
+           areas[0], areas[5]);
 
     printf("The size of a char: %ld\n", sizeof(char));
     printf("The size of name (char[]); %ld\n", sizeof(name));

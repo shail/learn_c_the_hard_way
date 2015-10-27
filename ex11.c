@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 // for-loops better than while because it is easy to forget to initialize the first
 // int i, forget to initialize second loop so it will take the value from before,
 // forget to increment in the loop and infinite loop
+// In copying array of string literals, you aren't actually copying, just changing the pointers
     int i = argc - 1;
     while(i > 0) {
         printf("arg %d: %s\n", i, argv[i]);

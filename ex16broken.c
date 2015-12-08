@@ -32,7 +32,6 @@ struct Person *Person_create(char *name, int age, int height, int weight) {
 void Person_destroy(struct Person *who) {
     assert(who != NULL);
 
-    free(who->name);
     free(who);
 }
 
@@ -66,7 +65,8 @@ int main(int argc, char *argv[]) {
     Person_print(frank);
 
     // destroy them both so we can clean up
-    Person_destroy(joe);
+    //Person_destroy(NULL); // this should abort compilation but for some reason doesnt
+    Person_destroy(joe); // --leak-check=full to see where memory leak is happening
     Person_destroy(frank);
 
     return 0;

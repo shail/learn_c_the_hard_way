@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-// forward_declarations: solves the problem of needing to use a function before it is defined
 void print_letters(char arg[]);
 
 void print_arguments(int argc, char *argv[])

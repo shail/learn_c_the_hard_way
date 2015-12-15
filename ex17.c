@@ -57,12 +57,23 @@ void Address_print(struct Address *addr) {
 }
 // rewind gets you back to the beginning of a file, you need to make sure to free errno
 void Database_load(struct Connection *conn) {
+    int rc = 1;
+    rc = fread(&conn->db->max_data, sizeof(int), 1, conn->file);
+    rc = fread(&conn->db->max_rows, sizeof(int), 1, conn->file);
+    if (rc != 1) die("Failed to load database.", NULL);
     struct Database *db = conn->db;
-    struct Address *addr;
-    db->rows = malloc(db->max_rows * sizeof(struct Address));
-    for (addr = db->rows; addr < db->rows + db->max_rows; ++addr) {
-      addr->name = malloc(db->max_data);
-      addr->email = malloc(db->max_data);
+    int string_size = sizeof(char) * conn->db->max_data;
+    int address_size = (sizeof(int) * 2) + (string_size * 2);
+    int rows_size = address_size * conn->db->max_rows;
+    db->rows = malloc(rows_size);
+    for (int i = 0; i < conn->db->max_rows; i++) {
+      struct Address *addr = &conn->db->rows[i];
+      fread(&addr->id, sizeof(int), 1, conn->file);
+      fread(&addr->set, sizeof(int), 1, conn->file);
+      addr->name = malloc(string_size);
+      fread(addr->name, string_size, 1, conn->file);
+      addr->email = malloc(string_size);
+      fread(addr->email, string_size, 1, conn->file);
     }
 }
 
@@ -98,21 +109,19 @@ void Database_write(struct Connection *conn) {
     if (rc == -1) die("Cannot flush database.", NULL);
 }
 
-void Database_create(struct Connection *conn, int max_data, int max_rows) {
-    struct Address *addr;
-    conn->db->max_rows = max_rows;
-    conn->db->max_data = max_data;
-    conn->db->rows = malloc(conn->db->max_rows * sizeof(struct Address));
-    for (int i = 0; i < max_rows; ++i) {
-        addr = &conn->db->rows[i];
-        addr->id = i;
-        addr->set = 0;
+void Database_create(struct Connection *conn) {
+    int string_size = sizeof(char) * conn->db->max_data;
+    int address_size = (sizeof(int) * 2) + (string_size * 2);
+    int rows_size = address_size * conn->db->max_rows;
+    conn->db->rows = malloc(rows_size);
+    for (int i = 0; i < conn->db->max_rows; i++) {
+        // made an Address Struct Prototype to initialize
+        struct Address addr = {.id = i, .set = 0};
 
-        addr->name = malloc(conn->db->max_data);
-        addr->name[0] = '\0';
-
-        addr->email = malloc(conn->db->max_data);
-        addr->email[0] = '\0';
+        // Allocate the memory for the strings!
+        addr.name = malloc(sizeof(char) * conn->db->max_data);
+        addr.email = malloc(sizeof(char) * conn->db->max_data);
+        conn->db->rows[i] = addr;
     }
 }
 
@@ -158,8 +167,8 @@ void Database_delete(struct Connection *conn, int id) {
 }
 
 void Database_list(struct Connection *conn) {
-    printf("Rows: %d", conn->db->max_rows);
     struct Database *db = conn->db;
+    printf("MAX_ROWS: %d\n", db->max_rows);
     for (int i = 0; i < conn->db->max_rows; i++) {
         struct Address *cur = &db->rows[i];
 
@@ -181,9 +190,9 @@ int main(int argc, char *argv[]) {
     int max_data, max_rows;
     switch (action) {
         case 'c':
-            max_data = (argc >= 4) ? atoi(argv[3]) : 512;
-            max_rows = (argc >= 5) ? atoi(argv[4]) : 100;
-            Database_create(conn, max_data, max_rows);
+            conn->db->max_data = atoi(argv[3]);
+            conn->db->max_rows = atoi(argv[4]);
+            Database_create(conn);
             Database_write(conn);
             break;
         case 'g':

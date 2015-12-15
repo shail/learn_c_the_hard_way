@@ -125,6 +125,19 @@ void Database_get(struct Connection *conn, int id) {
         die("ID is not set", NULL);
     }
 }
+// TODO: some reason cur->email and email aren't equal even though the strings look like they are, probably
+// something to do with the null byte
+void Database_find(struct Connection *conn, const char *email) {
+  struct Database *db = conn->db;
+  for (int i = 0; i < MAX_ROWS; i++) {
+    struct Address *cur = &db->rows[i];
+    printf("Is equal %d\n", cur->email == email);
+    printf("Current email: %s, Search Email: %s\n", cur->email, email);
+    if (cur->email == email) {
+      Address_print(cur);
+    }
+  }
+}
 
 // Copying struct prototypes -- initialize a struct on the stack and then copy into another struct in order to
 // delete the fields of a struct. Modern C allows you to simply assign one struct to another and it'll handle
@@ -168,6 +181,11 @@ int main(int argc, char *argv[]) {
             if (argc != 4) die("Need an id to get", NULL);
             Database_get(conn, id);
             break;
+        case 'f':
+            if (argc != 4) die("Need an email to find", NULL);
+            char *email = argv[3];
+            Database_find(conn, email);
+            break;
         case 's':
             if (argc != 6) die("Need id, name, email to set", NULL);
             Database_set(conn, id, argv[4], argv[5]);
@@ -182,7 +200,7 @@ int main(int argc, char *argv[]) {
             Database_list(conn);
             break;
         default:
-            die("invalid action, only: c=create, g=get, s=set, d=del, l=list", NULL);
+            die("invalid action, only: c=create, f=find, g=get, s=set, d=del, l=list", NULL);
     }
 
     Database_close(conn);

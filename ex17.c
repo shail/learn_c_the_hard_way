@@ -125,15 +125,11 @@ void Database_get(struct Connection *conn, int id) {
         die("ID is not set", NULL);
     }
 }
-// TODO: some reason cur->email and email aren't equal even though the strings look like they are, probably
-// something to do with the null byte
 void Database_find(struct Connection *conn, const char *email) {
   struct Database *db = conn->db;
   for (int i = 0; i < MAX_ROWS; i++) {
     struct Address *cur = &db->rows[i];
-    printf("Is equal %d\n", cur->email == email);
-    printf("Current email: %s, Search Email: %s\n", cur->email, email);
-    if (cur->email == email) {
+    if (strstr(cur->email, email)) {
       Address_print(cur);
     }
   }

@@ -18,6 +18,7 @@ typedef int (*compare_cb)(int a, int b);
 
 // Bubble sort using compare_cb to do the sorting
 int *bubble_sort(int *numbers, int count, compare_cb cmp) {
+  // Creating variables on the stack and allocating space on the heap.
   int temp, i, j = 0;
   int *target = malloc(count * sizeof(int));
 
@@ -25,6 +26,8 @@ int *bubble_sort(int *numbers, int count, compare_cb cmp) {
 
   memcpy(target, numbers, count * sizeof(int));
 
+  // cmp is just a pointer to a function, this lets the caller pass in anything they want as long as it
+  // matches the signature of "compare_cb"
   for (i = 0; i < count; i++) {
     for (j = 0; j < count; j++) {
       if (cmp(target[j], target[j+1]) > 0) {
@@ -102,11 +105,11 @@ int main(int argc, char *argv[]) {
  *  3.) Change the name to the pointer name: int (*compare_cb)(int a, int b)
  *
  * Key thing to remember is when you're done with this, the variable name for the pointer is called
- * compare_cb and you use it just like it is a function. 
+ * compare_cb and you use it just like it is a function.
  *
  * int (*tester)(int a, int b) = sorted_order;
  * printf("TEST: %d is same as %d\n", tester(2,3), sorted_order(2, 3))
- * 
+ *
  * This works even if the function pointer returns a pointer to something.
  *
  * It is hard to give functions as parameters to another function, this is where typedef is used. typedef is a

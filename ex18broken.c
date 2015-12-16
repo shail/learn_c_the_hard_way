@@ -72,6 +72,15 @@ void test_sorting(int *numbers, int count, compare_cb cmp) {
   printf("\n");
 
   free(sorted);
+
+  // To break this we can take the function pointer and try and convert it to another
+  unsigned char *data = (unsigned char*) cmp;
+
+  for (i = 0; i < 25; i++) {
+    printf("%02x:", data[i]);
+  }
+
+  printf("\n");
 }
 
 int main(int argc, char *argv[]) {

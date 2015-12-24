@@ -6,6 +6,7 @@ typedef enum {
   NORTH, SOUTH, EAST, WEST
 } Direction;
 
+// TODO: why is move a pointer to a function pointer? Return value is a pointer of anytype?
 typedef struct {
   char *description;
   int (*init)(void *self);

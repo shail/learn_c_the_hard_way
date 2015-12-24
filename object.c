@@ -9,12 +9,13 @@ void Object_destroy(void *self) {
 
     if (obj) {
         if (obj->description) free(obj->description);
-        free (obj);
+        free(obj);
     }
 }
 
 void Object_describe(void *self) {
     Object *obj = self;
+    assert(obj->description != NULL);
     printf("%s.\n", obj->description);
 }
 

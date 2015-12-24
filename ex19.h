@@ -6,7 +6,7 @@
 struct Monster {
   Object proto;
   int hit_points;
-}
+};
 
 typedef struct Monster Monster;
 
@@ -21,7 +21,7 @@ struct Room {
   struct Room *south;
   struct Room *east;
   struct Room *west;
-}
+};
 
 typedef struct Room Room;
 
@@ -33,7 +33,7 @@ struct Map {
   Object proto;
   Room *start;
   Room *location;
-}
+};
 
 typedef struct Map Map;
 

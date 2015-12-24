@@ -129,10 +129,10 @@ int Map_init(void *self) {
 }
 
 Object MapProto = {
-    .init = Map_init;
+    .init = Map_init,
     .move = Map_move,
     .attack = Map_attack
-}
+};
 
 int process_input(Map *game) {
     printf("\n> ");
@@ -142,7 +142,7 @@ int process_input(Map *game) {
     int damage = rand() % 4;
 
     switch(ch) {
-        case -1;
+        case -1:
             printf("Giving up? You suck.\n");
             return 0;
             break;

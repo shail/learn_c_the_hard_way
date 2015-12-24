@@ -1,5 +1,8 @@
 CFLAGS=-Wall -g
 
+test:
+	bash game.sh
+
 all: ex1 ex3
 
 ex19: object.o

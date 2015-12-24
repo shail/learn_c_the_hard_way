@@ -5,6 +5,33 @@
 #include <time.h>
 #include "ex19.h"
 
+int Goblin_attack(void *self, int damage) {
+    Goblin *goblin = self;
+
+    printf("You attack %s!\n", goblin->_(description));
+
+    goblin->hit_points -= damage;
+
+    if (goblin->hit_points > 0) {
+        printf("It is still alive.\n");
+        return 0;
+    } else {
+        printf("It is dead!\n");
+        return 1;
+    }
+}
+
+int Goblin_init(void *self) {
+    Goblin *goblin = self;
+    goblin->hit_points = 10;
+    return 1;
+}
+
+Object GoblinProto = {
+    .init = Goblin_init,
+    .attack = Goblin_attack
+};
+
 int Monster_attack(void *self, int damage) {
     Monster *monster = self;
 
@@ -63,9 +90,13 @@ void *Room_move(void *self, Direction direction) {
 int Room_attack(void *self, int damage) {
     Room *room = self;
     Monster *monster = room->bad_guy;
+    Goblin *goblin = room->goblin;
 
     if (monster) {
         monster->_(attack)(monster, damage);
+        return 1;
+    } else if (goblin) {
+        goblin->_(attack)(goblin, damage);
         return 1;
     } else {
         printf("You flail in the air at nothing.");
@@ -106,10 +137,11 @@ int Map_init(void *self) {
     Room *hall = NEW(Room, "The great Hall");
     Room *throne = NEW(Room, "The throne room");
     Room *arena = NEW(Room, "The arena with the minotaur");
-    Room *kitchen = NEW(Room, "Kitchen, you have the knife now");
+    Room *kitchen = NEW(Room, "Kitchen, you have the knife now and a goblin appears!");
 
     // put the bad guy in the arena
     arena->bad_guy = NEW(Monster, "The evil minoatur");
+    kitchen->goblin = NEW(Goblin, "Sammy the goblin");
 
     // setup the map rooms
     hall->north = throne;
@@ -179,7 +211,7 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
 
     // make our map to work with
-    Map *game = NEW(Map, "The Hall of the Minotaur.");
+    Map *game = NEW(Map, "The Hall of the Minotaur and Goblin.");
 
     printf("You enter the ");
     game->location->_(describe)(game->location);

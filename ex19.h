@@ -12,11 +12,22 @@ typedef struct Monster Monster;
 
 int Monster_attack(void *self, int damage);
 int Monster_init(void *self);
-// TODO: add another monster
+
+struct Goblin {
+  Object proto;
+  int hit_points;
+};
+
+typedef struct Goblin Goblin;
+
+int Goblin_attack(void *self, int damage);
+int Goblin_init(void *self);
+
 struct Room {
   Object proto;
 
   Monster *bad_guy;
+  Goblin *goblin;
   struct Room *north;
   struct Room *south;
   struct Room *east;

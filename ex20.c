@@ -102,3 +102,10 @@ int main(int argc, char *argv[]) {
 error:
     return 1;
 }
+/* CPP replaces macros with the expanded version of their definition, doing this recursively, expanding all
+ * the macros in macros. THE CPP is just a recursive templating system. Why not use a function like die? You
+ * want file:line numbers and the goto operation for an error handling exit. By wrapping the if-statement in a
+ * macro called check you make it clear that this is just error checking, and not part of the main flow. CPP
+ * has the ability to conditionally compile portions of code, so you have code that's only present when you
+ * build a developer or debug version of the program, rather than a wasted if-statement that won't be used if
+ * not debugging.

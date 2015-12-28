@@ -45,7 +45,7 @@
 // Placed in any part of a function that shouldn't run, and if it does prints an error message then jumps to
 // the error: label. You put this in if-statements and switch-statements to catch conditions that shouldn't
 // happen
-#define sentinel(M, ...) { log_err(M, ##_VA_ARGS__); errno=0; goto error; }
+#define sentinel(M, ...) { log_err(M, ##__VA_ARGS__); errno=0; goto error; }
 
 // Checks if a pointer is valid, and if it isn't reports an error as "Out of memory"
 #define check_mem(A) check((A), "Out of memory.")
@@ -53,6 +53,6 @@
 // If the error is common then you don't want to bother reporting it. It will use debug instead of log_err to
 // report the message. When you define NDEBUG, the check still happens, the error jump goes off, but the
 // message isn't printed
-#define check_debug(A, M, ...) if (!(A)) { debug(M, ##_VA_ARGS__); errno = 0; goto error; }
+#define check_debug(A, M, ...) if (!(A)) { debug(M, ##__VA_ARGS__); errno = 0; goto error; }
 
 #endif

@@ -109,3 +109,4 @@ error:
  * has the ability to conditionally compile portions of code, so you have code that's only present when you
  * build a developer or debug version of the program, rather than a wasted if-statement that won't be used if
  * not debugging.
+ */

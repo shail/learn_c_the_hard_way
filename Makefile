@@ -1,4 +1,4 @@
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -DNDEBUG
 
 test:
 	bash game.sh

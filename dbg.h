@@ -24,7 +24,7 @@
 #else
 // debug("format", arg1, arg2, ...) --> into fprintf call to stderr, ##__VAR_ARGS__ --> "put whatever they had
 // for extra arguments (...) here", __FILE__ and __LINE__ get you the current file:line for the debug message
-#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d:%s: " M "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
 #endif
 
 // Used to get a safe readable version of errno
@@ -32,11 +32,11 @@
 
 // Macros for logging messages meant for the end user. Works like debug but can't be compiled out
 
-#define log_err(M, ...) fprintf(stderr, "[ERROR] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define log_err(M, ...) fprintf(stderr, "[ERROR] (%s:%d:%s: errno %s) " M "\n", __FILE__, __LINE__, __func__, clean_errno(), ##__VA_ARGS__)
 
-#define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d:%s: errno %s) " M "\n", __FILE__, __LINE__, __func__, clean_errno(), ##__VA_ARGS__)
 
-#define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d: errno %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d:%s: errno %s) " M "\n", __FILE__, __LINE__, __func__, clean_errno(), ##__VA_ARGS__)
 
 // Will make sure condition A is true, and if not logs the error M (with variable arguments for log_err), then
 // jumps to the function's error: for cleanup

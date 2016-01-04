@@ -58,3 +58,9 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+/* In the strictest sense, everything in C is pass-by-value. Pass-by-value means we are passing a copy of the
+ * variable to a function. C can pass a pointer but that is still pass-by-value because it is copying the
+ * value of the pointer, the address into the function. When passing a pointer in C, the syntax requires a
+ * dereference to be applied to get the value. Passing a reference is when you pass a pointer.
+ */

@@ -11,6 +11,8 @@ int normal_copy(char *from, char *to, int count) {
     return i;
 }
 
+// C is pretty loose with some of its syntax. You can put half a do-while in one part of a switch-statement,
+// the the other half somewhere else and it will still work.
 int duffs_device(char *from, char *to, int count) {
     {
         int n = (count + 7) / 8;
@@ -31,6 +33,8 @@ int duffs_device(char *from, char *to, int count) {
     return count;
 }
 
+// Default fallthrough semantics of switch-statements, means you can jump to a particular case, and then it
+// will just keep running until the end of the switch.
 int zeds_device(char *from, char *to, int count) {
     {
         int n = (count + 7) / 8;

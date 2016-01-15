@@ -73,3 +73,9 @@ int main(int argc, char *argv[]) {
 error:
   return -1;
 }
+
+// Important part of this exercise is that scanf actually sucks. It is fine for simple conversion of numbers,
+// but fails for strings because it's difficult to tell scanf how big a buffer is before you read. There's
+// also a problem with a function like gets. That function has no idea how big the input buffer is at all and
+// will just trash your program. The gets function is so bad that some platforms actually warn you when the
+// program runs that you're using gets.

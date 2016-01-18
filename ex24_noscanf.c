@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "dbg.h"
 
 #define MAX_DATA 100
+
+char *trim(char *s) {
+  int i = strlen(s) - 1;
+  if ((i > 0) && (s[i] == '\n')) {
+    s[i] = '\0';
+  }
+  return s;
+}
 
 typedef enum EyeColor {
   BLUE_EYES, GREEN_EYES, BROWN_EYES,
@@ -29,10 +38,12 @@ int main(int argc, char *argv[]) {
   printf("What's you First Name? ");
   in = fgets(you.first_name, MAX_DATA-1, stdin);
   check(in != NULL, "Failed to read first name.");
+  strtok(you.first_name, "\n");
 
   printf("What's your Last Name? ");
   in = fgets(you.last_name, MAX_DATA-1, stdin);
   check(in != NULL, "Failed to read last name.");
+  strtok(you.last_name, "\n");
   
   printf("How old are you? ");
   char age[MAX_DATA];
@@ -64,8 +75,8 @@ int main(int argc, char *argv[]) {
 
   printf("---- Results ----\n");
 
-  printf("First Name: %s", you.first_name);
-  printf("Last Name: %s", you.last_name);
+  printf("First Name: %s\n", you.first_name);
+  printf("Last Name: %s\n", you.last_name);
   printf("Age: %d\n", you.age);
   printf("Eyes: %s\n", EYE_COLOR_NAMES[you.eyes]);
   printf("Income: %f\n", you.income);

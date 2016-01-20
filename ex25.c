@@ -1,5 +1,7 @@
 // By creating a variable argument function, you can create nicer interfaces to your library. They are handy
 // for certain types of "builder" functions, formatting functions, and anything that takes variable arguments.
+// Difference between calloc() and malloc() is calloc() zero initializes the buffer, performance impact
+// because it might take a while to fill it up with zeros
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,6 +10,15 @@
 
 #define MAX_DATA 100
 
+// Pointer to a pointer because if you enter multiple words, it will be pointers to multiple strings
+// Use ** when you want to preserve (OR retain change in) the memory-allocation or assignment outside of a
+// function call. One reason is you want to change the value of the pointer passed to a function as the
+// function argument.
+//
+// Pointers to pointers also come in handy as "handles" to memory between functions to re-locatable memory.
+// This means that the function can change the memory that is being pointed to by the pointer inside the
+// handle variable, and every function or object that is using the handle will properly point to the newly
+// relocated (or allocated) memory.
 int read_string(char **out_string, int max_buffer) {
   *out_string = calloc(1, max_buffer + 1);
   check_mem(*out_string);

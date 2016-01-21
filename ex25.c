@@ -48,6 +48,8 @@ error:
   return -1;
 }
 
+// Set the last parameter of the function to ..., and this indicates to C that this function will take any
+// number of arguments after the fmt argument. Can't put any more arguments after this
 int read_scan(const char *fmt, ...) {
   int i = 0;
   int rc = 0;
@@ -56,12 +58,22 @@ int read_scan(const char *fmt, ...) {
   char **out_string = NULL;
   int max_buffer = 0;
 
+  // This handles setting up the gear to handle variable arguments
   va_list argp;
   va_start(argp, fmt);
 
+  // Loop through the format string fmt and process formats
   for (i = 0; fmt[i] != '\0'; i++) {
     if (fmt[i] == '%') {
       i++;
+      // To get a variable from the va_list argp, use the macro va_arg(argp, TYPE) where TYPE is the exact
+      // type of what I will assign this function parameter to. The downside to this design is you're flying
+      // blind, so if you don't have enough parameters then oh well, you'll most likely crash.
+      // Interesting difference from scanf is people want read_scan to create the strings it reads when it
+      // hits a 's' sequence. When you give this sequence, the function takes two parameters off the va_list
+      // argp stack, max function size to read, and the output character string pointer. This makes read_scan
+      // more consistent than scanf since you always give an address-of & on variables to have them set
+      // appropriately.
       switch(fmt[i]) {
         case '\0':
           sentinel("Invalid format, you ended with %%.");

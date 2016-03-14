@@ -6,14 +6,22 @@
 #include "bstrlib.h"
 #include "dbg.h"
 
+// static functions are only visible to other functions in same file
+// const variable declaration means that you won't change the variable
+// FILE is a macro defined in stdio.h, fopen returns a FILE pointer
 static FILE *DB_open(const char *path, const char *mode) {
   return fopen(path, mode);
 }
 
-static void DB_colse(FILE *db) {
+// closes the stream, all buffers are flushed
+static void DB_close(FILE *db) {
   fclose(db);
 }
 
+// bstring is a better string type that provides some added performance and usability over regular C strings
+// bread() is a function that takes a pointer to a function as an argument, bNread type is used to specify the
+// type of function, fread() function is close enough to pass muster when cast, second argument is the value
+// to be passed to the function pointed to by bNRead
 static bstring DB_load() {
   FILE *db = NULL;
   bstring data = NULL;
@@ -41,7 +49,10 @@ int DB_update(const char *url) {
   FILE *db = DB_open(DB_FILE, "a+");
   check(db, "Failed to open DB file: %s", DB_FILE);
 
+  // bfromcstr takes a standard C library '\0' terminated char buffer and generate a bstring with the same
+  // contents
   bstring line = bfromcstr(url);
+  // concat second arg to first arg
   bconchar(line, '\n');
   int rc = fwrite(line->data, blength(line), 1, db);
   check(rc == 1, "Failed to append to the db.");
@@ -60,6 +71,7 @@ int DB_find(const char *url) {
   data = DB_load();
   check(data, "Failed to load: %s", DB_FILE);
 
+  // binstr checks for bstring line in data starting at position 0
   if (binstr(data, 0, line) == BSTR_ERR) {
     res = 0;
   } else {
@@ -74,10 +86,17 @@ error: //fallthrough
 }
 
 int DB_init() {
+  // apr_pool_t is the fundamental pool type
+  // memory pool allows you to easily manage a set of memory chunks, this way you allocate one memory pool and
+  // you can allocate multiple memory chunks from the pool
   apr_pool_t *p = NULL;
   apr_pool_initialize();
+  // pool just created, if parent pool is NULL, the new pool is a root pool
   apr_pool_create(&p, NULL);
 
+  // access() function check the file named by the pathname is accessible via the mode provide, value of amode
+  // is the bitwise-inclusive OR of the access permissions to be checked
+  // apr_dir_make_recursive creates a new directoy on the file system
   if (access(DB_DIR, W_OK | X_OK) == -1) {
     apr_status_t rc = apr_dir_make_recursive(DB_DIR,
           APR_UREAD | APR_UWRITE | APR_UEXECUTE |
